@@ -51,7 +51,7 @@ public class Comment {
 		this.cid = cid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "aid", nullable = false)
 	public Article getArticle() {
 		return this.article;
@@ -61,7 +61,7 @@ public class Comment {
 		this.article = article;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "uid", nullable = false)
 	public User getUser() {
 		return this.user;

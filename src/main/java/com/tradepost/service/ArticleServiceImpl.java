@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tradepost.dao.ArticleDao;
 import com.tradepost.entity.Article;
-import com.tradepost.entity.Page;
 import com.tradepost.entity.User;
 
 @Service
@@ -36,9 +35,16 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	@Transactional
-	public void addArticle(String title, String content, Timestamp timestamp, User user) {
-		articleDao.addArticle(title, content, timestamp, user);
+	public void addArticle(String title, String content, String label, Timestamp timestamp, User user, String username) {
+		articleDao.addArticle(title, content, label, timestamp, user, username);
 	}
+	
+	@Override
+	@Transactional
+	public void addArticle(String title, String content, String label, String articleimg, Timestamp timestamp, User user, String username) {
+		articleDao.addArticle(title, content, label, articleimg, timestamp, user, username);
+	}
+
 
 	@Override
 	@Transactional
@@ -54,12 +60,6 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	@Transactional
-	public List<Article> getArticlePageList(int currentPage, int pageSize) {
-		return articleDao.getArticlePageList(currentPage, pageSize);
-	}
-
-	@Override
-	@Transactional
 	public List<Article> searchArticleByKey(String key) {
 		return articleDao.searchArticleByKey(key);
 	}
@@ -68,6 +68,12 @@ public class ArticleServiceImpl implements ArticleService {
 	@Transactional
 	public List<Article> searchArticleByTag(String tagname) {
 		return articleDao.searchArticleByTag(tagname);
+	}
+	
+	@Override
+	@Transactional
+	public void setArticleImg(Integer aid, String img) {
+		articleDao.setArticleImg(aid, img);
 	}
 
 }

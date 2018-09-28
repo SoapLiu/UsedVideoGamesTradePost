@@ -1,22 +1,16 @@
 package com.tradepost.controller;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tradepost.entity.Article;
 import com.tradepost.entity.Comment;
-import com.tradepost.entity.Page;
 import com.tradepost.entity.User;
 import com.tradepost.service.ArticleService;
 import com.tradepost.service.CommentService;
@@ -45,6 +38,7 @@ public class ArticleController {
 		
 	@RequestMapping(value = "/list/{currentPage}", method = RequestMethod.GET)
 	public String getArticleList(HttpSession session, Model model, @PathVariable("currentPage") int currentPage) {
+		
 		if(session.getAttribute("user") != null) {
 			User user = (User) session.getAttribute("user");
 			session.setAttribute("user", userService.getUserByID(user.getUid()));
@@ -52,6 +46,7 @@ public class ArticleController {
 		List<Article> list = articleService.getArticleList();
 		int pageSize = 10;
 		int articleTotal = list.size();
+		if(articleTotal == 0) return "articleList";
 		int pageTotal = (articleTotal % pageSize == 0) ? (articleTotal / pageSize) : (articleTotal / pageSize + 1);
 		if(currentPage > pageTotal) currentPage = pageTotal;
 		List<Article> articleList = new ArrayList<Article>();
@@ -91,4 +86,59 @@ public class ArticleController {
 		model.addAttribute("searchKeyword", tagname);
 		return "search";
 	}
+	
+	@RequestMapping(value="/addarticle", method = RequestMethod.POST)
+	public String addArticle(Model model, HttpSession session,
+				@RequestParam(value = "title") String title,
+				@RequestParam(value = "content") String content,
+				@RequestParam(value = "uploadarticleimg", required = false) String uploadarticleimg,
+				@RequestParam(value = "label") String label) {
+		User user = (User) session.getAttribute("user");
+//		User user = userService.getUserByID(1);
+		
+		if(user == null) {
+			model.addAttribute("message", "You can post your games after you login, redirect to home page in");
+			model.addAttribute("redirectPage", "/controller/list/1");
+			return "message";
+		}
+		if(StringUtils.isEmpty(title)) {
+			model.addAttribute("message", "Title cannot be blank, redirect to home page in");
+			model.addAttribute("redirectPage", "/controller/list/1");
+			return "message";
+		}
+		
+		if(uploadarticleimg.equals("")) {
+			articleService.addArticle(title, content, label, new Timestamp(new Date().getTime()), user, user.getUsername());
+			model.addAttribute("message", "Successfully post, redirect to home page in");
+			model.addAttribute("redirectPage", "/controller/list/1");
+			return "message";
+			
+		}
+		articleService.addArticle(title, content, label, uploadarticleimg, new Timestamp(new Date().getTime()), user, user.getUsername());
+		model.addAttribute("message", "Successfully post, redirect to home page in");
+		model.addAttribute("redirectPage", "/controller/list/1");
+		
+		return "message";
+	}
+	
+	@RequestMapping(value="/post", method = RequestMethod.GET)
+	public String post() {
+		return "post";
+	}
+	
+	@RequestMapping(value="/userdeletearticle/{aid}", method = RequestMethod.GET)
+	public String articleDelete(HttpSession session, @PathVariable("aid") Integer aid) {
+		User user = (User) session.getAttribute("user");
+		articleService.deleteArticleByID(aid);
+		return ("redirect:/" + ("userdetail/" + user.getUid()));
+	}
+	
+//	@RequestMapping(value="/delete", method = RequestMethod.GET)
+//	public String delete(HttpSession session) {
+//		User user = (User) session.getAttribute("user");
+//		int aid = 120;
+//		articleService.deleteArticleByID(aid);
+//		return ("redirect:/" + ("userdetail/" + user.getUid()));
+//	}
+
 }

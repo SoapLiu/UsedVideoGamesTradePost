@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +29,7 @@ public class Article {
 	private Date date;
 	private String label;
 	private Set<Comment> commentSet = new HashSet<Comment>();
+	private String articleimg;
 
 	public Article() {
 	}
@@ -56,7 +58,7 @@ public class Article {
 		this.aid = aid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "uid", nullable = false)
 	public User getUser() {
 		return this.user;
@@ -112,7 +114,16 @@ public class Article {
 		this.label = label;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+	@Column(name = "articleimg")
+	public String getArticleimg() {
+		return articleimg;
+	}
+
+	public void setArticleimg(String articleimg) {
+		this.articleimg = articleimg;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade=CascadeType.REMOVE)
 	public Set<Comment> getCommentSet() {
 		return this.commentSet;
 	}

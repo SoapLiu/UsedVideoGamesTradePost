@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public void addUser(String username, String password) {
-		userDao.addUser(username, password);
+	public void addUser(String username, String password, String headimg, String role) {
+		userDao.addUser(username, password, headimg, role);
 	}
 
 	@Override
@@ -35,4 +35,22 @@ public class UserServiceImpl implements UserService{
 		return userDao.getUserByID(uid);
 	}
 	
+	@Override
+	@Transactional
+	public User getUserByUsername(String username) {
+		return userDao.getUserByUsername(username);
+	}
+	
+	@Override
+	@Transactional
+	public void changePassword(String username, String password) {
+		userDao.changePassword(username, password);
+	}
+	
+	@Override
+	@Transactional
+	public void changeHeadimg(String username, String headimg) {
+		userDao.changeHeadimg(username, headimg);
+	}
+
 }

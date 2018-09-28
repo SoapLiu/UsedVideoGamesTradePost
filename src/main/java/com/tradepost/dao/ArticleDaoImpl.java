@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.tradepost.entity.Article;
-import com.tradepost.entity.Page;
 import com.tradepost.entity.User;
 
 @Repository
@@ -24,7 +23,6 @@ public class ArticleDaoImpl implements ArticleDao {
 	}
 	
 	private Article article;
-	private Page page;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -41,13 +39,15 @@ public class ArticleDaoImpl implements ArticleDao {
 	}
 
 	@Override
-	public void addArticle(String title, String content, Timestamp timestamp, User user) {
+	public void addArticle(String title, String content, String label, Timestamp timestamp, User user, String username) {
 		article = new Article();
 		Session session = this.sessionFactory.getCurrentSession();
 		article.setTitle(title);
 		article.setContent(content);
+		article.setLabel(label);
 		article.setDate(timestamp);
 		article.setUser(user);
+		article.setAuthor(username);
 		session.save(article);
 	}
 
@@ -68,18 +68,6 @@ public class ArticleDaoImpl implements ArticleDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Article> getArticlePageList(int currentPage, int pageSize) {
-		page = new Page();
-		Session session = this.sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from User u inner join u.articleSet order by aid desc").setFirstResult(currentPage).setMaxResults(pageSize);
-		page.setList((List<Article>) query.list());
-		page.setCurrentPage(currentPage);
-		page.setPageSize(pageSize);
-		return (List<Article>) query.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
 	public List<Article> searchArticleByKey(String key) {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Article a where a.title like ? order by aid desc").setParameter(0, "%"+key+"%");
@@ -92,6 +80,29 @@ public class ArticleDaoImpl implements ArticleDao {
 		Session session = this.sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Article a where a.label like ? order by aid desc").setParameter(0, "%"+tagname+"%");
 		return (List<Article>) query.list();
+	}
+
+	@Override
+	public void setArticleImg(Integer aid, String img) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Article article = (Article) session.get(Article.class, aid);
+		article.setArticleimg(img);
+		session.update(article);
+	}
+
+	@Override
+	public void addArticle(String title, String content, String label, String articleimg, Timestamp timestamp,
+			User user, String username) {
+		article = new Article();
+		Session session = this.sessionFactory.getCurrentSession();
+		article.setTitle(title);
+		article.setContent(content);
+		article.setLabel(label);
+		article.setArticleimg(articleimg);
+		article.setDate(timestamp);
+		article.setUser(user);
+		article.setAuthor(username);
+		session.save(article);
 	}
 
 }

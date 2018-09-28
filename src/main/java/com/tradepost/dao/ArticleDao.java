@@ -12,16 +12,18 @@ public List<Article> getArticleList();
 	
 	public Article getArticleByID(Integer aid);
 	
-	public void addArticle(String title, String content, Timestamp timestamp, User user);
+	public void addArticle(String title, String content, String label, Timestamp timestamp, User user, String username);
 	
 	public List<Article> getArticleByUID(Integer uid);
 	
 	public void deleteArticleByID(Integer aid);
 	
-	public List<Article> getArticlePageList(int currentPage, int pageSize);
-
 	public List<Article> searchArticleByKey(String key);
 
-	List<Article> searchArticleByTag(String tagname);
+	public List<Article> searchArticleByTag(String tagname);
+
+	public void setArticleImg(Integer aid, String img);
+
+	public void addArticle(String title, String content, String label, String articleimg, Timestamp timestamp, User user, String username);
 	
 }

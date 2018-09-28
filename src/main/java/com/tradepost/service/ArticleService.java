@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.tradepost.entity.Article;
-import com.tradepost.entity.Page;
 import com.tradepost.entity.User;
 
 public interface ArticleService {
@@ -13,15 +12,18 @@ public interface ArticleService {
 
 	public Article getArticleByID(Integer aid);
 
-	public void addArticle(String title, String content, Timestamp timestamp, User user);
+	public void addArticle(String title, String content, String label, Timestamp timestamp, User user, String username);
 
 	public List<Article> getArticleByUID(Integer uid);
 
 	public void deleteArticleByID(Integer aid);
 	
-	public List<Article> getArticlePageList(int currentPage, int pageSize);
-
 	public List<Article> searchArticleByKey(String key);
 
-	List<Article> searchArticleByTag(String tagname);
+	public List<Article> searchArticleByTag(String tagname);
+
+	public void setArticleImg(Integer aid, String img);
+
+	public void addArticle(String title, String content, String label, String articleimg, Timestamp timestamp, User user, String username);
+	
 }

@@ -26,11 +26,12 @@ public class CommentDaoImpl implements CommentDao {
 	private Comment comment;
 
 	@Override
-	public void addComment(String content, Article article, User user, Timestamp timestamp) {
+	public void addComment(String content, Article article, String author, User user, Timestamp timestamp) {
 		comment = new Comment();
 		Session session = this.sessionFactory.getCurrentSession();
 		comment.setContent(content);
 		comment.setArticle(article);
+		comment.setAuthor(author);
 		comment.setUser(user);
 		comment.setDate(timestamp);
 		session.save(comment);
@@ -62,4 +63,22 @@ public class CommentDaoImpl implements CommentDao {
 		return (List<Comment>) query.list();
 	}
 
+	@SuppressWarnings({ "unchecked", "unused" })
+	@Override
+	public void deleteCommentByAid(Integer aid) {
+		Session session = this.sessionFactory.getCurrentSession();
+		List<Comment> list = (List<Comment>) session.get(Comment.class, aid);
+		session.delete(list);
+//		String sql = "delete from comment c where c.aid=" + aid;
+//		session.createSQLQuery(sql).executeUpdate();
+	}
+	
+	@Override
+	public void deleteCommentByCid(Integer cid) {
+		Session session = this.sessionFactory.getCurrentSession();
+		Comment comment = (Comment) session.get(Comment.class, cid);
+		session.delete(comment);
+	}
+	
 }
+

@@ -24,8 +24,8 @@ public class CommentServiceImpl implements CommentService {
 	
 	@Override
 	@Transactional
-	public void addComment(String content, Article article, User user, Timestamp timestamp) {
-		commentDao.addComment(content, article, user, timestamp);
+	public void addComment(String content, Article article, String author, User user, Timestamp timestamp) {
+		commentDao.addComment(content, article, author, user, timestamp);
 	}
 
 	@Override
@@ -44,6 +44,18 @@ public class CommentServiceImpl implements CommentService {
 	@Transactional
 	public int getCommentCount(Integer aid) {
 		return commentDao.getCommentCount(aid);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteCommentByCid(Integer cid) {
+		commentDao.deleteCommentByCid(cid);
+	}
+
+	@Override
+	@Transactional
+	public void deleteCommentByAid(Integer aid) {
+		commentDao.deleteCommentByAid(aid);
 	}
 
 }

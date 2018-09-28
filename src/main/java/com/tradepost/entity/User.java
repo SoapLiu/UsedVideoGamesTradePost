@@ -20,6 +20,7 @@ public class User {
 	public String username;
 	private String password;
 	private String headimg;
+	private String role;
 	private Set<Comment> commentSet = new HashSet<Comment>();
 	private Set<Article> articleSet = new HashSet<Article>();
 	
@@ -45,7 +46,7 @@ public class User {
 		this.uid = uid;
 	}
 	
-	@Column(name = "username")
+	@Column(name = "username", unique = true)
 	public String getUsername() {
 		return this.username;
 	}
@@ -71,6 +72,15 @@ public class User {
 	public void setHeadimg(String headimg) {
 		this.headimg = headimg;
 	}
+	
+	@Column(name = "role")
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	public Set<Comment> getCommentSet() {
@@ -90,5 +100,6 @@ public class User {
 		this.articleSet = articleSet;
 	}
 
+	
 	
 }

@@ -14,46 +14,65 @@
 <link rel="stylesheet" href="../resources/blueprint/print.css" type="text/css" media="print">
 <link rel="stylesheet" href="../resources/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
 
-<script type="text/javascript"
-	src="<c:url value="../resources/js/jquery.min.js"/>"></script>
-<script type="text/javascript"
-	src="<c:url value="../resources/bootstrap/js/bootstrap.min.js"/>"></script>
-<script type="text/javascript"
-	src="<c:url value="../resources/js/jquery.nivo.slider.js"/>"></script>
-
 </head>
 <body>
 	<div class="container">
-		<h1>Welcome to Used Video Games Trade Post</h1>
-		<div class="span-7">
-        		<p>here is search part</p>
+		<center><a href="/controller/list/1"><img src="../resources/imgs/pagehead.jpg" /></a></center>
+		<legend>Search</legend>
+		<div class="span-8">
+        		<form action="${pageContext.request.contextPath }/searchbytag" method="post" style="float:left;">
+        			<input type="text" name="tagname" class="need change something here" />
+        			<button type="submit"> Search by Tag</button>
+        		</form>
       	</div>
-      	<div class="span-8">
-        		<p>here is register part</p>
+      	<div class="span-7 colborder">
+        		<form action="${pageContext.request.contextPath }/searchbykeyword" method="post" style="float:left;">
+        			<input type="text" name="keyword" class="need change something here" />
+        			<button type="submit"> Search by Keyword</button>
+        		</form>
       	</div>
+      	
       	<div class="span-7">
-        		<p>here is sign in part</p>
+        		<input onclick="window.open('${pageContext.request.contextPath }/loginform')" type='button' value='Login' style="float:left;" >
+        		<input onclick="window.open('${pageContext.request.contextPath }/registerform')" type='button' value='Register' style="float:left; position:relative; left:10%;">
+        		<input onclick="window.open('${pageContext.request.contextPath }/post')" type='button' value='Post' style="float:left; position:relative; left:18%;">
+        		<input onclick="window.open('${pageContext.request.contextPath }/logout')" type='button' value='Logout' style="float:right;" >
       	</div>
       	<hr />
-      	<div>
-      		<h2 class="alt">${userdetail.username }'s post</h2>
-      	</div>
-      	<hr />
+
       	
       	<div class="span-5 colborder">	
       		<center>
-      			<a href="${pageContext.request.contextPath}/userdetail/${userdetail.uid }" target="_blank">
-      				<img src="<c:url value="../resources/imgs/head.png" />" style="width: 50%;" alt="headimg" />
+      			<a href="${pageContext.request.contextPath}/userdetail/${userdetail.uid }" >
+      				<img src="<c:url value="${userdetail.headimg }" />" style="width: 100px;height: 100px;" alt="headimg" />
       			</a>
       			<br />
       			<br />
       			User: <a href="${pageContext.request.contextPath}/userdetail/${userdetail.uid}" target="_blank">${userdetail.username }</a>
+      			<br />
+      			<br />
+      			<c:if test="${userFlag eq true}">
+      				<input onclick="window.open('${pageContext.request.contextPath }/password')" type='button' value='Change Password' >
+      				<br />
+      				<br />
+      				<form action="${pageContext.request.contextPath}/headimgupload" method="post" enctype="multipart/form-data">
+						<input type="file" name="headimgfile" />
+						<input type="submit" value="Change Profilephoto">
+					</form>
+      			</c:if>
+      			
+      			
       		</center>
      	</div>	
       	<div class="span-17 last" style="position:relative;">
       		<c:forEach items="${userdetailarticlelist}" var="article" >
       			<h4>
-      				<a href="${pageContext.request.contextPath}/articledetail/${article.aid}" target="_blank" style="text-decoration:none;">${article.title }</a>
+      				<a href="${pageContext.request.contextPath}/articledetail/${article.aid}" style="text-decoration:none;">${article.title }</a>
+      				<c:if test="${userdetail.uid eq user.uid || user.role eq 'admin'}">
+      					<div style="float: right;">
+	      					<input onclick="window.open('${pageContext.request.contextPath }/userdeletearticle/${article.aid}')" type='button' value='delete' >
+						</div>
+      				</c:if>	
 					<br />
 				</h4>
 				<c:if test="${!empty article.label }">
@@ -67,7 +86,7 @@
       		
 		</div>
 		<hr />		
-		
+		<center><a href="http://www.liuyi.cool"><img src="../resources/imgs/foot.jpeg" /></a></center>
 	</div>
 
 	

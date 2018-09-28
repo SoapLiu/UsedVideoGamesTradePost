@@ -21,13 +21,13 @@
 		<legend>Search</legend>
 		<div class="span-8">
         		<form action="${pageContext.request.contextPath }/searchbytag" method="post" style="float:left;">
-        			<input type="text" name="tagname" class="need change something here" />
+        			<input type="text" name="tagname" />
         			<button type="submit"> Search by Tag</button>
         		</form>
       	</div>
       	<div class="span-7 colborder">
         		<form action="${pageContext.request.contextPath }/searchbykeyword" method="post" style="float:left;">
-        			<input type="text" name="keyword" class="need change something here" />
+        			<input type="text" name="keyword" />
         			<button type="submit"> Search by Keyword</button>
         		</form>
       	</div>
@@ -38,51 +38,52 @@
         		<input onclick="window.open('${pageContext.request.contextPath }/post')" type='button' value='Post' style="float:left; position:relative; left:18%;">
         		<input onclick="window.open('${pageContext.request.contextPath }/logout')" type='button' value='Logout' style="float:right;" >
       	</div>
-		<hr />
-      	<div class="span-17 last" style="position:relative;">
-      		<c:forEach items="${searchArticleList}" var="article" >
-      			<h4>
-      				<a href="${pageContext.request.contextPath}/articledetail/${article.aid}" style="text-decoration:none;">${article.title }</a>
-					<div style="float: right;">
-						<a href="${pageContext.request.contextPath}/userdetail/${article.user.uid}" style="text-decoration:none;">${article.author }</a>
-					</div>
-					<br />
-				</h4>
-				<c:if test="${!empty article.label }">
-					<div class="span-1">#${article.label }#</div>
-				</c:if>
-				<p style="float: right;">
-					<fmt:formatDate value="${article.date }" pattern="MM/dd HH:mm:ss" />
-				</p>
-      			<hr />
-      		</c:forEach>
-		</div>
-		<div class="span-5 last">
-      		<div style="padding-top: 50px;">
+      	<hr />
+      	
+      	<!-- post part -->
+		<c:choose>
+			<c:when test="${!empty user }">
+				<div style="padding-top: 10px;">
+            		<legend>Post your games</legend>				
+				<fieldset>
+            			<form id="addarticle" action="<c:url value='/addarticle' />" method="post">
+            				<p>
+              				<label for="title">Title</label><br>
+              				<input type="text" class="title" name="title" id="title" placeholder="Title, eg. Call Of Duty: Modern War 2">
+            				</p>
+            				<p>
+              				<label for="label">Tag</label><br>
+              				<input type="text" class="label" id="label" name="label" placeholder="#tag#, eg. #FPS#">
+            				</p>
+            				<p>
+              				<label for="content">Content</label><br>
+              				<textarea name="content" id="content" rows="5" cols="40" style="margin: 5.5px 0px; width: 900px; height: 200px;"></textarea>
+            				</p>
+            				<p>
+            					<label for="uploadarticleimg">Article Picture Address</label><br>
+            					<input type="text" name="uploadarticleimg" value="${uploadarticleimg }" />
+            				</p>
+            				<p>
+              				<input type="submit" value="Submit">
+              				<input type="reset" value="Reset">
+            				</p>
+          			</form>
+          			<form action="${pageContext.request.contextPath}/articleimgupload" method="post" enctype="multipart/form-data">
+						<input type="file" name="file" />
+						<input type="submit" value="Upload">
+					</form>
+        			</fieldset>		
+				</div>
+			</c:when>
+			<c:otherwise>
 				<center>
-					<c:choose>
-						<c:when test="${!empty user }">
-							<a href="${pageContext.request.contextPath}/userdetail/${user.uid }" target="_blank">
-								<img src="<c:url value="${user.headimg }" />" style="width: 100px;height: 100px;" alt="headimg" >
-							</a>
-							<br /><br />
-							<a href="${pageContext.request.contextPath}/userdetail/${user.uid }" target="_blank" style="text-decoration:none;">
-								Username: ${user.username }
-							</a>
-							<br /><br />
-							<input onclick="window.open('${pageContext.request.contextPath }/logout')" type='button' value='Logout' >
-						</c:when>
-						<c:otherwise>
-							<input onclick="window.open('${pageContext.request.contextPath }/loginform')" type='button' value='Login' >
-						</c:otherwise>
-					</c:choose>
+					<h3>You can post your games after you login</h3>
 				</center>
-			</div>
-		</div>
-		<hr />		
-		<center><a href="http://www.liuyi.cool"><img src="resources/imgs/foot.jpeg" /></a></center>	
+			</c:otherwise>
+		</c:choose>
+		
+     <center><a href="http://www.liuyi.cool"><img src="resources/imgs/foot.jpeg" /></a></center>
 	</div>
-
 	
 </body>
 </html>
